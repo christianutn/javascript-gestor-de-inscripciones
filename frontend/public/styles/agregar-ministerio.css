@@ -1,0 +1,30 @@
+.container-modal-agregar-ministerio::before {
+   position: fixed;
+}
+
+.container-modal-agregar-ministerio .open {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    gap: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    background-color: aliceblue;
+    border-radius: 10px;
+    border: 1.5px solid black;
+    height: 50vh;
+    width: 30vw; /* Ancho del modal */
+    z-index: 1;
+}
+
+.container-modal-agregar-ministerio .closed {
+    display: none;
+}
+
+
+
+
+
+ 
+
+

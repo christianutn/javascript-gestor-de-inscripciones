@@ -14,6 +14,8 @@ import { getPlataformasDeDictado } from "../../utils/functions/getPlataformasDeD
 import { getTiposDeCapacitacion } from "../../utils/functions/getTiposDeCapacitacion.js"
 import { obtenerDatosUltimaInscripcion } from "../../utils/functions/obtenerDatosUltimaInscripcion.js";
 
+import { getMinisterios } from "../../utils/functions/getMinisterios.js";
+
 import "../../public/styles/form-inscripcion.css"
 
 import DatePicker from 'react-datepicker';
@@ -247,8 +249,8 @@ export const FormularioInscripcion = () => {
         setModalAgregarMinisterio(false);
         // Al un referente agregar un ministerio el cod será igual al idMinisterio. Luego esto deberá ser modificado por usuarios con permisos mas altos.
         if (nuevoMinisterio._id) {
-            const nuevaListaDeMinisterios = ministerios.filter(ministerio => ministerio[0] !== nuevoMinisterio[0]);
-            nuevaListaDeMinisterios.push([nuevoMinisterio.cod, nuevoMinisterio.nombre]);
+            const nuevaListaDeMinisterios = ministerios.filter(ministerio => ministerio.cod !== nuevoMinisterio.cod);
+            nuevaListaDeMinisterios.push({cod: nuevoMinisterio.cod, nombre: nuevoMinisterio.nombre});
             setMinisterios(nuevaListaDeMinisterios);
         }
 
@@ -273,7 +275,7 @@ export const FormularioInscripcion = () => {
                 console.log("Formulario - Inscripciones: ", inscripcionesNuevas)
 
                 setInscripciones(inscripcionesNuevas);
-                const ministeriosNuevos = getCodNombresMinisterios(inscripcionesNuevas);
+                const ministeriosNuevos = await getMinisterios(inscripcionesNuevas);
                 setMinisterios(ministeriosNuevos);
 
                 console.log("Formulario - Ministerio Nuevo: ", ministeriosNuevos)
@@ -359,8 +361,8 @@ export const FormularioInscripcion = () => {
                                 <option value="sin-seleccionar-ministerio">Seleccione un Ministerio</option>
                                 {ministerios && ministerios.length > 0 && ministerios.map((ministerio) => (
                                     // Ministerio[0] es el cod ejemplo: MEPPP ; Ministerio[1] es el nombre Ministerio de Empleo Plan Primer Paso
-                                    <option key={ministerio[0]} value={ministerio[0]}>
-                                        {ministerio[1]}
+                                    <option key={ministerio.cod} value={ministerio.cod}>
+                                        {ministerio.nombre}
                                     </option>
                                 ))}
                             </select>

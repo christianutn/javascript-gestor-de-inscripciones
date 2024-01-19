@@ -9,13 +9,19 @@ import { useEffect, useState, useRef } from 'react';
 export const ModalAgregarArea = ({ isOpen, onClose, ministerios }) => {
 
    console.log("MINISTERIOS DESDE MODLA: ", ministerios)
-    const handleInputCuil = (event) => {
-        setCuil(event.target.value);
-    }
 
-    const handleInputApellido = (event) => {
-        setApellido(event.target.value);
-    }
+   const [selectMinisterio, setSelectMinisterio] = useState('sin-seleccionar-ministerio')
+   const [isOptionSelecte1, setIsOptionSelecte1] = useState(true)
+
+   const handleChangeSelectMinisterio = (e) => {
+       setSelectMinisterio(e.target.value)
+       if(e.target.value !== "sin-seleccionar-ministerio"){
+           setIsOptionSelecte1(false)
+           console.log("SELECT MINISTERIO: ", e.target.value)
+       }else{
+           setIsOptionSelecte1(true)
+       }
+   }
 
 
     return (
@@ -27,10 +33,17 @@ export const ModalAgregarArea = ({ isOpen, onClose, ministerios }) => {
                     </h1>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                    <input type="text" name="cuil" id="cuil" placeholder='Cuil' onChange={handleInputCuil} />
+                    <select   className={isOptionSelecte1 ? 'select-ministerios-op1' : 'select-ministerios-op2'} name="ministerios" id="ministerios" value={selectMinisterio} onChange={handleChangeSelectMinisterio}>
+                        <option  value="sin-seleccionar-ministerio">Seleccionar un Ministerio</option>
+                        {
+                            ministerios && ministerios.map((ministerio) => (
+                                <option key={ministerio.cod} value={ministerio.cod}>{ministerio.nombre}</option>
+                            ))
+                        }
+                    </select>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                    <input type="text" name="" id="" placeholder='Apellido' onChange={handleInputApellido} />
+                    <input type="text" name="" id="" placeholder='Nombre de Área' />
                 </div>
 
 
@@ -86,10 +99,6 @@ export const ModalAgregarArea = ({ isOpen, onClose, ministerios }) => {
                             marginLeft: '5%',
 
                         }}
-
-                        
-
-
 
                     ></button>
                 </div>

@@ -128,3 +128,38 @@
     font-size: 20px;
     text-shadow: 2px 2px 4px #000000;
 }
+
+
+.select-ministerios-op1 {
+    width: 60vw;
+    height: 80px;
+    background-color: #00000000;
+    border: none;
+    border-bottom: wheat 2px solid;
+    font-size: 16px;
+    color: whitesmoke;
+    outline: none;
+}
+
+.select-ministerios-op1 option{
+    font-size: 30px;
+    background-color: #000000ab;
+}
+.select-ministerios-op2 option{
+    font-size: 30px;
+    background-color: #000000ab;
+}
+
+.select-ministerios-op2{
+    width: 60vw;
+    height: 80px;
+    background-color: #00000000;
+    border: none;
+    border-bottom: wheat 2px solid;
+    font-size: 25px;
+    color: whitesmoke;
+    outline: none;
+}
+
+
+

@@ -1,16 +1,14 @@
 import { obtenerIdAreaByCod } from "./obtenerIdAreaByCod.js";
 
-export const getCursosByArea = async (codArea) => {
+export const getCursosByArea = async (idArea) => {
     try {
-            console.log("GetCursosByArea Cod seleccionado: ",codArea)
-            const idArea = await obtenerIdAreaByCod(codArea);
             
 
             const response = await fetch(`http://localhost:4000/api/cursos?area=${idArea}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token')
+                    'Authorization': localStorage.getItem('token'),
                 },
             });
             

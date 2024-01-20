@@ -9,18 +9,8 @@ const ministerioSchema = new Schema({
     nombre: {
         type: String,
         required: true
-    },
-    areas: {
-        type: [Schema.Types.ObjectId],
-        ref: 'areas',
-        required: true,
-        default: []
     }
 });
 
-
-ministerioSchema.pre(['findOne', 'findById', 'find'], function () {
-    this.populate('areas');
-});
 
 export const ministerioModel = model('ministerios', ministerioSchema)

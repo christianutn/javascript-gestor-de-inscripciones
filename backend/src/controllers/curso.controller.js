@@ -78,8 +78,8 @@ export const updateCursoByCod = async (req, res) => {
 
 export const postCurso = async (req, res) => {
     try {
-        const { cod, nombre, autorizador, ministerio } = req.body;
-        const newCurso = await cursoModel.create({ cod, nombre, ministerio, autorizador });
+        const { cod, nombre, autorizador, ministerio, area } = req.body;
+        const newCurso = await cursoModel.create({ cod, nombre, ministerio, autorizador, area });
         if (newCurso) {
             res.status(201).json(newCurso);
         } else {

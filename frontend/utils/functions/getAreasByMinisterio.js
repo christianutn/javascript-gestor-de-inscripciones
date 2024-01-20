@@ -1,9 +1,9 @@
 
-export const getAreasByMinisterio = async (codMinisterio) => {
+export const getAreasByMinisterio = async (idMinisterio) => {
     try {
 
-        console.log("GetAreasByMinisterio Cod seleccionado: ",codMinisterio)
-        const response = await fetch(`http://localhost:4000/api/ministerios?cod=${codMinisterio}`,
+        console.log("Get Area By idMinisterio: ",idMinisterio)
+        const response = await fetch(`http://localhost:4000/api/areas?ministerio=${idMinisterio}`,
             {
                 method: 'GET',
                 headers: {
@@ -15,8 +15,8 @@ export const getAreasByMinisterio = async (codMinisterio) => {
         if (response.status === 200) {
             const data = await response.json();
            
-            console.log("GetAreasByMinisterio - data: ", data[0].areas)
-            return data[0].areas;
+            console.log("GetAreasByMinisterio - data: ", data)
+            return data;
 
         } else {
             throw new Error('Error al obtener las areas By Ministerio - Not Found');
@@ -30,3 +30,8 @@ export const getAreasByMinisterio = async (codMinisterio) => {
 
 
 }
+
+
+
+
+

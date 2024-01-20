@@ -6,7 +6,7 @@ import router from './routes/index.routes.js';
 import initializePassport from '../config/passport.js';
 import cors from 'cors'
 
-
+import { ministerioModel } from './models/ministerio.models.js';
 
 
 
@@ -70,9 +70,6 @@ app.get('/', (req, res) => {
 
 
 
-
-
-        
 
 
 

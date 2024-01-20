@@ -10,11 +10,6 @@ const cursoSchema = new Schema({
         type: String,
         required: true
     },
-    ministerio: {
-        type: Schema.Types.ObjectId,
-        ref: 'ministerios',
-        required: true
-    },
     area: {
         type: Schema.Types.ObjectId,
         ref: 'areas',
@@ -29,7 +24,6 @@ const cursoSchema = new Schema({
 
 
 cursoSchema.pre(['findOne', 'findById', 'find'], function () {
-    this.populate('ministerio');
     this.populate('autorizador');
     this.populate('area');
 });

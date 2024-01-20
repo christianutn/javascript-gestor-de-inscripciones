@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 
+// Define el esquema
 const areaSchema = new Schema({
     cod: {
         type: String,
@@ -8,9 +9,17 @@ const areaSchema = new Schema({
     },
     nombre: {
         type: String,
-        required: true,
-        
+        required: true
+    },
+    ministerio: {
+        type: Schema.Types.ObjectId,
+        ref: 'ministerios',
+        required: true
     }
 });
 
-export const areaModel = model('areas', areaSchema)
+areaSchema.pre(['findOne', 'findById', 'find'], function () {
+    this.populate('ministerio');
+});
+// Define el modelo
+export const areaModel = model('areas', areaSchema);

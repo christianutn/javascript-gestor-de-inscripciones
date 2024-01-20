@@ -2,6 +2,7 @@
 import React from 'react';
 import "../../public/styles/abm-formulario.css"
 import { useEffect, useState, useRef } from 'react';
+import { crearNuevaArea } from '../../utils/functions/crearNuevaArea';
 
 // ModalBuscarTutor.jsx
 
@@ -12,7 +13,7 @@ export const ModalAgregarArea = ({ isOpen, onClose, ministerios }) => {
 
    const [selectMinisterio, setSelectMinisterio] = useState('sin-seleccionar-ministerio')
    const [isOptionSelecte1, setIsOptionSelecte1] = useState(true)
-
+    const [nombreNuevoArea, setNombreNuevoArea] = useState('')
    const handleChangeSelectMinisterio = (e) => {
        setSelectMinisterio(e.target.value)
        if(e.target.value !== "sin-seleccionar-ministerio"){
@@ -23,7 +24,36 @@ export const ModalAgregarArea = ({ isOpen, onClose, ministerios }) => {
        }
    }
 
+   const handleCrearNuevaArea = async () => {
+       
+    try {
+        const nuevaArea = await crearNuevaArea(nombreNuevoArea, selectMinisterio);
 
+
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: "Área creado con éxito",
+            showConfirmButton: false,
+            timer: 3000,
+            backdrop: false,
+        });
+
+        onClose(nuevaArea, selectMinisterio);
+    } catch (error) {
+
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: `${error.message}`,
+            showConfirmButton: false,
+            timer: 3000,
+            backdrop: false,
+        });
+        onClose();
+    }
+   }
+   
     return (
         <div className='container-modal-tutor'>
             <div className={`${isOpen ? 'open' : 'closed'}`}>
@@ -37,13 +67,13 @@ export const ModalAgregarArea = ({ isOpen, onClose, ministerios }) => {
                         <option  value="sin-seleccionar-ministerio">Seleccionar un Ministerio</option>
                         {
                             ministerios && ministerios.map((ministerio) => (
-                                <option key={ministerio.cod} value={ministerio.cod}>{ministerio.nombre}</option>
+                                <option key={ministerio._id} value={ministerio._id}>{ministerio.nombre}</option>
                             ))
                         }
                     </select>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                    <input type="text" name="" id="" placeholder='Nombre de Área' />
+                    <input type="text" name="" id="" placeholder='Nombre de Área nuevo'  onChange={(e) => setNombreNuevoArea(e.target.value)}/>
                 </div>
 
 
@@ -100,6 +130,7 @@ export const ModalAgregarArea = ({ isOpen, onClose, ministerios }) => {
 
                         }}
 
+                        onClick={handleCrearNuevaArea}
                     ></button>
                 </div>
 

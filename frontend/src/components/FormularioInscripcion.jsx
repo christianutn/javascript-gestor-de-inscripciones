@@ -3,11 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { getInscripciones } from "../../utils/functions/getInscripciones.js";
-import { getCodNombresMinisterios } from "../../utils/functions/getCodNombresMinisterios.js";
 import { getAreasByMinisterio } from "../../utils/functions/getAreasByMinisterio.js";
 import { getCursosByArea } from "../../utils/functions/getCursosByArea.js";
 import { getAutorizadorByCurso } from "../../utils/functions/getAutorizadoresByCurso.js";
-import { obtenerIdCursoByCod } from "../../utils/functions/obtenerIdCursoByCod.js";
 import { getInscripcionesByIdCurso } from "../../utils/functions/getInscripcionesByIdCurso.js";
 import { getMediosDeInscripcion } from "../../utils/functions/getMediosDeInscripcion.js";
 import { getPlataformasDeDictado } from "../../utils/functions/getPlataformasDeDictado.js";
@@ -25,6 +23,8 @@ import { isWeekend, isFriday, isMonday, set } from 'date-fns';
 import { ModalBuscarTutor } from "./ModalBuscarTutor.jsx";
 import { ModalAgregarMinisterio } from "./ModalAgregarMinisterio.jsx";
 import { ModalAgregarArea } from "./ModalAgregarArea.jsx";
+import { ModalAgregarCurso } from "./ModalAgregarCurso.jsx";
+import { ModalAgregarAutorizador } from "./ModalAgregarAutorizador.jsx";
 
 
 
@@ -83,10 +83,24 @@ export const FormularioInscripcion = () => {
         const ministerioSeleccionado = event.target.value;
         setSelectedMinisterio(ministerioSeleccionado);
 
-        if (ministerioSeleccionado !== "sin-seleccionar-ministerio") {
-            const nuevaAreas = await getAreasByMinisterio(ministerioSeleccionado);
-            setAreas(nuevaAreas);
-        }
+        let nuevaAreas = []
+        //Ministerio seleccionado es cod del ministerio
+        if (ministerioSeleccionado !== "sin-seleccionar-ministerio") nuevaAreas = await getAreasByMinisterio(ministerioSeleccionado);
+
+        setAreas(nuevaAreas);
+        setCursos([])
+        setSelectedCurso("sin-seleccionar-curso")
+        setAutorizador("")
+        setSelectedArea("sin-seleccionar-area")
+        setCupo(0)
+        setCantidadHoras(0)
+        setTutores([])
+        setSelectedMedioInscripcion("sin-seleccionar-ministerio")
+        setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
+        setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
+
+
+
     }
 
     // EStados para manejar areas
@@ -100,12 +114,19 @@ export const FormularioInscripcion = () => {
         const areaSeleccionada = event.target.value;
         setSelectedArea(areaSeleccionada);
 
-        console.log("Formulario - HandleSelectedAreaChange: ", areaSeleccionada)
-        const nuevosCursos = await getCursosByArea(areaSeleccionada)
+        let nuevosCursos = [];
+        if (areaSeleccionada !== "sin-seleccionar-area") nuevosCursos = await getCursosByArea(areaSeleccionada)
 
         setCursos(nuevosCursos);
-
-        console.log("Formulario - Cursos: ", nuevosCursos)
+        setSelectedCurso("sin-seleccionar-curso")
+        //Reiniciar demás variables. 
+        setAutorizador("")
+        setCupo(0)
+        setCantidadHoras(0)
+        setTutores([])
+        setSelectedMedioInscripcion("sin-seleccionar-ministerio")
+        setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
+        setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
 
     }
 
@@ -120,31 +141,32 @@ export const FormularioInscripcion = () => {
         const cursoSeleccionado = event.target.value;
         setSelectedCurso(cursoSeleccionado);
 
-        console.log("Formulario - cod de Curso Seleccionado: ", cursoSeleccionado)
-        const autorizador = await getAutorizadorByCurso(cursoSeleccionado)
-        setAutorizador(autorizador);
 
-        console.log("Formulario - Autorizador: ", autorizador)
+        if (cursoSeleccionado !== "sin-seleccionar-curso") {
+            const autorizador = await getAutorizadorByCurso(cursoSeleccionado)
+            setAutorizador(autorizador);
 
-        const idCurso = await obtenerIdCursoByCod(cursoSeleccionado);
-        const listaInscripcionesCurso = await getInscripcionesByIdCurso(idCurso);
+            //selectedCurso es el idCurso
+            const listaInscripcionesCurso = await getInscripcionesByIdCurso(cursoSeleccionado);
+            const dataUltimaInscripcion = await obtenerDatosUltimaInscripcion(listaInscripcionesCurso);
+
+            setSelectedMedioInscripcion(dataUltimaInscripcion.medioDeInscripcion.cod)
+            setSelectedPlataformaDictado(dataUltimaInscripcion.plataformaDeDictado.cod)
+            setSelectedTipoCapacitacion(dataUltimaInscripcion.tipoDeCapacitacion.cod)
+            setCantidadHoras(dataUltimaInscripcion.cantidadHoras)
+            setCupo(dataUltimaInscripcion.cupo)
+            setTutores(dataUltimaInscripcion.tutores)
+        } else {
+            setAutorizador("")
+            setSelectedMedioInscripcion("sin-seleccionar-ministerio")
+            setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
+            setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
+            setCantidadHoras(0)
+            setCupo(0)
+            setTutores([])
+        }
 
 
-
-        console.log("Formuario - Lista de inscripciones: ", listaInscripcionesCurso)
-
-        const dataUltimaInscripcion = await obtenerDatosUltimaInscripcion(listaInscripcionesCurso);
-
-        console.log("Formulario Última inscripción: ", dataUltimaInscripcion)
-
-        setSelectedMedioInscripcion(dataUltimaInscripcion.medioDeInscripcion.cod)
-        setSelectedPlataformaDictado(dataUltimaInscripcion.plataformaDeDictado.cod)
-        setSelectedTipoCapacitacion(dataUltimaInscripcion.tipoDeCapacitacion.cod)
-        setCantidadHoras(dataUltimaInscripcion.cantidadHoras)
-        setCupo(dataUltimaInscripcion.cupo)
-        setTutores(dataUltimaInscripcion.tutores)
-
-        console.log("Formulario - Tutores: ", dataUltimaInscripcion.tutores)
 
 
 
@@ -245,13 +267,26 @@ export const FormularioInscripcion = () => {
 
     const [isOpenModalAgregarMinisterio, setModalAgregarMinisterio] = useState(false);
 
-    const handleCloseModalAgregagrMinisterio = (nuevoMinisterio) => {
+    const handleCloseModalAgregagrMinisterio = async (nuevoMinisterio) => {
         setModalAgregarMinisterio(false);
         // Al un referente agregar un ministerio el cod será igual al idMinisterio. Luego esto deberá ser modificado por usuarios con permisos mas altos.
         if (nuevoMinisterio._id) {
-            const nuevaListaDeMinisterios = ministerios.filter(ministerio => ministerio.cod !== nuevoMinisterio.cod);
-            nuevaListaDeMinisterios.push({cod: nuevoMinisterio.cod, nombre: nuevoMinisterio.nombre});
-            setMinisterios(nuevaListaDeMinisterios);
+
+            const ministerios = await getMinisterios();
+            setMinisterios(ministerios);
+            setSelectedMinisterio(nuevoMinisterio._id);
+
+            setAreas([]);
+            setCursos([])
+            setSelectedCurso("sin-seleccionar-curso")
+            setAutorizador("")
+            setSelectedArea("sin-seleccionar-area")
+            setCupo(0)
+            setCantidadHoras(0)
+            setTutores([])
+            setSelectedMedioInscripcion("sin-seleccionar-ministerio")
+            setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
+            setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
         }
 
     }
@@ -261,8 +296,75 @@ export const FormularioInscripcion = () => {
     const [isOpenModalArea, setModalArea] = useState(false);
 
 
-    const handleOnCloseModalArea = () => {
-        setModalArea(false);
+    const handleOnCloseModalArea = async (nuevaArea, idMinisterio) => {
+
+        if (nuevaArea._id) {
+            setModalArea(false)
+
+            setSelectedMinisterio(idMinisterio);
+
+            const areas = await getAreasByMinisterio(idMinisterio)
+            setAreas(areas)
+            setSelectedArea(nuevaArea._id);
+            //Reiniciamos 
+            setCursos([])
+            setSelectedCurso("sin-seleccionar-curso")
+            setAutorizador("")
+            setSelectedArea("sin-seleccionar-area")
+            setCupo(0)
+            setCantidadHoras(0)
+            setTutores([])
+            setSelectedMedioInscripcion("sin-seleccionar-ministerio")
+            setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
+            setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
+        } else {
+            setModalArea(false)
+        }
+    }
+
+
+
+    // Estado para manejar modal de agregar curso
+
+    const [isOpenModalAgregarCurso, setModalAgregarCurso] = useState(false);
+
+    const handleCloseModalAgregagrCurso = async (nuevoCurso, idMinisterio, idArea) => {
+        setModalAgregarCurso(false);
+
+        if (nuevoCurso._id) {
+            try {
+                setSelectedMinisterio(idMinisterio);
+                const areas = await getAreasByMinisterio(idMinisterio)
+
+                setAreas(areas)
+                setSelectedArea(idArea);
+
+                const cursos = await getCursosByArea(idArea)
+                setCursos(cursos)
+                setSelectedCurso(nuevoCurso._id)
+
+                const autorizador = await getAutorizadorByCurso(nuevoCurso._id)
+                setAutorizador(autorizador);
+            } catch (error) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: `${error.message}`,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    backdrop: false,
+                });
+            }
+
+        }
+    }
+
+
+    //Manejar estados de Modal agregar usuarios
+
+    const [isOpenModalAgregarAutorizador,setIsOpenModalAgregarAutorizador]=useState(false);
+    const handleCloseModalAgregagrAutorizador = ()=>{
+        setIsOpenModalAgregarAutorizador(false);
     }
     //COn use Effect de esta manera logro que las funciones que lo contiene se ejecutan al principio del render, luego no se vuelve a ejecutar.
     useEffect(() => {
@@ -275,7 +377,8 @@ export const FormularioInscripcion = () => {
                 console.log("Formulario - Inscripciones: ", inscripcionesNuevas)
 
                 setInscripciones(inscripcionesNuevas);
-                const ministeriosNuevos = await getMinisterios(inscripcionesNuevas);
+
+                const ministeriosNuevos = await getMinisterios();
                 setMinisterios(ministeriosNuevos);
 
                 console.log("Formulario - Ministerio Nuevo: ", ministeriosNuevos)
@@ -329,7 +432,18 @@ export const FormularioInscripcion = () => {
             <ModalAgregarArea
                 isOpen={isOpenModalArea}
                 onClose={handleOnCloseModalArea}
-                ministerios = {ministerios}
+                ministerios={ministerios}
+            />
+
+            <ModalAgregarCurso
+                isOpen={isOpenModalAgregarCurso}
+                onClose={handleCloseModalAgregagrCurso}
+                ministerios={ministerios}
+            />
+
+            <ModalAgregarAutorizador
+                isOpen={isOpenModalAgregarAutorizador}
+                onClose={handleCloseModalAgregagrAutorizador}
             />
 
             <div className="container">
@@ -361,7 +475,7 @@ export const FormularioInscripcion = () => {
                                 <option value="sin-seleccionar-ministerio">Seleccione un Ministerio</option>
                                 {ministerios && ministerios.length > 0 && ministerios.map((ministerio) => (
                                     // Ministerio[0] es el cod ejemplo: MEPPP ; Ministerio[1] es el nombre Ministerio de Empleo Plan Primer Paso
-                                    <option key={ministerio.cod} value={ministerio.cod}>
+                                    <option key={ministerio.cod} value={ministerio._id}>
                                         {ministerio.nombre}
                                     </option>
                                 ))}
@@ -376,10 +490,10 @@ export const FormularioInscripcion = () => {
                             <button className="buttonIcon" style={{ backgroundImage: 'url(../img/editar.png)' }}></button>
                             <button className="buttonIcon" style={{ backgroundImage: 'url(../img/agregar.png)' }} onClick={() => setModalArea(true)}></button>
                             <select className="form-select" id="area" value={selectedArea} onChange={handleSelectedAreaChange}>
-                                <option value="sin-seleccionar-ministerio" >Seleccione un Ministerio</option>
+                                <option value="sin-seleccionar-area" >Seleccione un Ministerio</option>
                                 {
                                     areas && areas.length > 0 && areas.map((area) => (
-                                        <option key={area.cod} value={area.cod}>
+                                        <option key={area._id} value={area._id}>
                                             {area.nombre}
                                         </option>
                                     ))
@@ -391,12 +505,12 @@ export const FormularioInscripcion = () => {
                                 Curso
                             </label>
                             <button className="buttonIcon" style={{ backgroundImage: 'url(../img/editar.png)' }}></button>
-                            <button className="buttonIcon" style={{ backgroundImage: 'url(../img/agregar.png)' }}></button>
+                            <button className="buttonIcon" style={{ backgroundImage: 'url(../img/agregar.png)' }} onClick={() => setModalAgregarCurso(true)}></button>
                             <select className="form-select" id="curso" value={selectedCurso} onChange={handleSelectedCursoChange}>
-                                <option value="sin-seleccionar-ministerio" >Seleccione un Ministerio</option>
+                                <option value="sin-seleccionar-curso" >Seleccione un Ministerio</option>
                                 {
                                     cursos && cursos.length > 0 && cursos.map((curso) => (
-                                        <option key={curso.cod} value={curso.cod}>
+                                        <option key={curso._id} value={curso._id}>
                                             {curso.nombre}
                                         </option>
                                     ))
@@ -414,7 +528,7 @@ export const FormularioInscripcion = () => {
                                         {autorizador && autorizador.descripcion}
                                     </p>
                                     <button className="buttonIcon" style={{ backgroundImage: 'url(../img/editar.png)', backgroundColor: 'white' }}></button>
-                                    <button className="buttonIcon" style={{ backgroundImage: 'url(../img/agregar.png)', backgroundColor: 'white' }}></button>
+                                    <button className="buttonIcon" style={{ backgroundImage: 'url(../img/agregar.png)', backgroundColor: 'white' }} onClick={() => setIsOpenModalAgregarAutorizador(true)}></button>
                                 </div>
                             </div>
 

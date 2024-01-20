@@ -41,7 +41,7 @@
     width: 70vw;
     border-bottom: #ff0000 2.5px solid;
     font-size: 32px;
-    color: #ff0000;
+    color: wheat;
 
 
 }
@@ -55,6 +55,7 @@
 
 .container-modal-tutor input:focus::placeholder {
     transform: translateY(-20px);
+    
 }
 
 
@@ -163,3 +164,40 @@
 
 
 
+.btn-desplegable{
+    width: 60vw;
+    height: 30px;
+    background-color: rgba(119, 115, 115, 0.952);
+    font-size: 16px;
+    color: white;
+    outline: none;
+    border-bottom: #ccc;
+    border-left: #ccc;
+    border-right: #ccc;
+    border-top-color: #ccc;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
+    border-top-width: 0px;
+    
+    
+}
+
+.div-desplegable{
+    
+    overflow-y: scroll;
+  
+    
+}
+
+.div-desplegable::-webkit-scrollbar {
+    width: 0; /* Ancho 0 para ocultar la barra de desplazamiento en WebKit (Chrome, Safari, etc.) */
+}
+
+.btn-desplegable:focus{
+    box-shadow: none;
+    width: 65vw;
+    height: 30px;
+    font-size: 20px;
+    border: white solid 2px;
+   
+   
+}

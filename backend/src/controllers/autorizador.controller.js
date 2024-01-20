@@ -4,7 +4,18 @@ import {autorizadorModel} from "../models/autorizador.models.js";
 export const getAutorizadores = async (req, res) => {
     
     try {
-        const autorizadores = await autorizadorModel.find();
+
+
+        const query = {};
+
+        const { nombre, apellido } = req.query;
+        if (nombre) {
+            query.nombre = { $regex: nombre, $options: 'i' };
+        }
+        if (apellido) {
+            query.apellido = { $regex: apellido, $options: 'i' };
+        }
+        const autorizadores = await autorizadorModel.find(query);
         
         if(autorizadores){
             res.status(200).json(autorizadores);

@@ -65,7 +65,7 @@ inscripcionSchema.pre(['findOne', 'findById', 'find'], function() {
     this.populate({
         path: 'curso',
         populate: [
-            { path: 'ministerio', populate: { path: 'areas' } },
+            { path: 'area', populate: { path: 'ministerio' } },
             { path: 'autorizador' }
         ]
     })

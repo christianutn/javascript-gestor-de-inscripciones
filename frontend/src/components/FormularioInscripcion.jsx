@@ -25,7 +25,7 @@ import { ModalAgregarMinisterio } from "./ModalAgregarMinisterio.jsx";
 import { ModalAgregarArea } from "./ModalAgregarArea.jsx";
 import { ModalAgregarCurso } from "./ModalAgregarCurso.jsx";
 import { ModalAgregarAutorizador } from "./ModalAgregarAutorizador.jsx";
-
+import { ModalAgregarTutor } from "./ModalAgregarTutor.jsx";
 
 
 export const FormularioInscripcion = () => {
@@ -362,9 +362,15 @@ export const FormularioInscripcion = () => {
 
     //Manejar estados de Modal agregar usuarios
 
-    const [isOpenModalAgregarAutorizador,setIsOpenModalAgregarAutorizador]=useState(false);
-    const handleCloseModalAgregagrAutorizador = ()=>{
+    const [isOpenModalAgregarAutorizador, setIsOpenModalAgregarAutorizador] = useState(false);
+    const handleCloseModalAgregagrAutorizador = () => {
         setIsOpenModalAgregarAutorizador(false);
+    }
+
+    //Manejar estados de Modal agregar tutor
+    const [isOpenModalAgregarTutor, setIsOpenModalAgregarTutor] = useState(false);
+    const handleCloseModalAgregagrTutor = (nuevoTutor) => {
+        setIsOpenModalAgregarTutor(false);
     }
     //COn use Effect de esta manera logro que las funciones que lo contiene se ejecutan al principio del render, luego no se vuelve a ejecutar.
     useEffect(() => {
@@ -446,6 +452,16 @@ export const FormularioInscripcion = () => {
                 onClose={handleCloseModalAgregagrAutorizador}
             />
 
+            <ModalBuscarTutor
+                isOpen={isOpenModal}
+                onClose={handleCloseModal}
+                onSelectTutor={handleAgregarTutor}
+            />
+
+            <ModalAgregarTutor
+                isOpen={isOpenModalAgregarTutor}
+                onClose={handleCloseModalAgregagrTutor}
+            />
             <div className="container">
 
                 <form onSubmit={(e) => e.preventDefault()}>
@@ -667,7 +683,7 @@ export const FormularioInscripcion = () => {
                                         <label style={{ fontSize: '30px' }} htmlFor="ministerio" className="form-label mt-4">
                                             Tutores
                                         </label>
-
+                                        <button className="buttonIcon" style={{ backgroundImage: 'url(../img/agregar.png)' }} onClick={() => setIsOpenModalAgregarTutor(true)}></button>
 
                                         {
                                             tutores && tutores.length > 0 && tutores.map((tutor) => (
@@ -691,14 +707,14 @@ export const FormularioInscripcion = () => {
 
                                             ))
                                         }
-
+                                        
                                         <button className="buttonIcon" id="btnAgregarTutor" name="btnAgregarTutor" style={{ backgroundImage: 'url(../img/agregarTutor.png)' }} onClick={handleOpenModal}></button>
 
 
 
                                     </fieldset>
 
-                                    <ModalBuscarTutor isOpen={isOpenModal} onClose={handleCloseModal} onSelectTutor={handleAgregarTutor} />
+
 
                                 </div>
 
@@ -720,10 +736,6 @@ export const FormularioInscripcion = () => {
                             Enviar
                         </button>
                     </div>
-
-
-
-
                 </form>
 
 

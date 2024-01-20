@@ -59,7 +59,7 @@ export const ModalAgregarCurso = ({ isOpen, onClose, ministerios }) => {
                 backdrop: false,
             });
 
-            
+
         } catch (error) {
             Swal.fire({
                 position: 'center',
@@ -83,13 +83,24 @@ export const ModalAgregarCurso = ({ isOpen, onClose, ministerios }) => {
         setListaAutorizadores(lista)
     }
 
-    
 
+    const [isOpenModalAutorizador, setIsOpenModalAutorizador] = useState(false)
+
+    const handleCloseModalAutorizador = () => {
+        setIsOpenModalAutorizador(false)
+    }
+
+    const handleClickCrearAutorizador = () => {
+
+        onClose();
+        setIsOpenModalAutorizador(true)
+    }
 
     return (
-        
-        <div className='container-modal-tutor'>
-            <ModalAgregarAutorizador isOpen={isOpen} onClose={onClose}></ModalAgregarAutorizador>
+
+
+        <div className='container-modal-tutor' >
+            <ModalAgregarAutorizador isOpen={isOpenModalAutorizador} onClose={handleCloseModalAutorizador}></ModalAgregarAutorizador>
             <div className={`${isOpen ? 'open' : 'closed'}`}>
                 <div style={{ textAlign: 'center' }}>
                     <h1 className="form-label mt-4" >
@@ -119,7 +130,7 @@ export const ModalAgregarCurso = ({ isOpen, onClose, ministerios }) => {
                 <div style={{ textAlign: 'center' }}>
                     <input type="text" name="" id="" placeholder='Buscar Autorizador' value={autorizador} onChange={handleAutorizador} />
                     <div className='div-desplegable'>
-                        <button className='btn-desplegable' >Crear nuevo autorizador</button>
+                        <button className='btn-desplegable' onClick={handleClickCrearAutorizador}>Crear nuevo autorizador</button>
                         {/* Lista desplegable de opciones coincidentes */}
                         {listaAutorizadores && autorizador !== "" && listaAutorizadores.map((autorizador) => (
 
@@ -143,11 +154,6 @@ export const ModalAgregarCurso = ({ isOpen, onClose, ministerios }) => {
                     </div>
 
                 </div>
-
-
-
-
-
 
                 <div style={{ textAlign: 'center' }}>
                     <input type="text" name="" id="" placeholder='Nombre del Curso' onChange={(e) => setNombreNuevoCurso(e.target.value)} />
@@ -195,6 +201,7 @@ export const ModalAgregarCurso = ({ isOpen, onClose, ministerios }) => {
 
             </div>
         </div>
+
     );
 };
 

@@ -61,13 +61,13 @@ export const postTutor = async (req, res) => {
             res.status(201).json(newTutor);
         }else{
             res.status(400).json({
-                message: 'No se pudo crear el tutor'
+                message: `No se pudo crear el tutor`
             })
         }
 
     } catch (error) {
         res.status(500).json({
-            message: 'Error al crear el tutor',
+            message: `${error}`,
             error: `Consulta de error: ${error}`
         })
     }

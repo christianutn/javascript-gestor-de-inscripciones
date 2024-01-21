@@ -12,6 +12,7 @@ export const appendRowsNew = async (req, res) => {
         //Genera nueva fila para agreagr a google sheets
         const rowNew = generarNuevaFila(inscripcion)
 
+        
         //Obtiene autorización
         const auth = authorize
         const googleSheets = google.sheets({ version: 'v4', auth });

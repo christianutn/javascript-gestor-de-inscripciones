@@ -24,8 +24,13 @@ const cursoSchema = new Schema({
 
 
 cursoSchema.pre(['findOne', 'findById', 'find'], function () {
-    this.populate('autorizador');
-    this.populate('area');
+    this.populate({
+        path: 'area',
+        populate: { path: 'ministerio' }
+    })
+    .populate('autorizador')
+    
+    
 });
 
 

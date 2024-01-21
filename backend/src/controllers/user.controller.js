@@ -16,7 +16,7 @@ export const getUsers = async (req, res) => {
         if(rol) query.rol = rol
 
 
-        const usuarios = await userModel.find(query);
+        const usuarios = await userModel.find(query).sort('apellido')
         
         if(usuarios) {
             res.status(200).json(usuarios);

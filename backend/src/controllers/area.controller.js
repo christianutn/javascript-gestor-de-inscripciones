@@ -17,7 +17,7 @@ export const getAreas = async (req, res) => {
             query.ministerio = ministerio
         }
 
-        const areas = await areaModel.find(query);
+        const areas = await areaModel.find(query).sort('nombre');
 
 
 

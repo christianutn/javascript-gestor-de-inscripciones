@@ -13,8 +13,9 @@ import { getTiposDeCapacitacion } from "../../utils/functions/getTiposDeCapacita
 import { obtenerDatosUltimaInscripcion } from "../../utils/functions/obtenerDatosUltimaInscripcion.js";
 import { crearNuevaInscripcion } from "../../utils/functions/crearNuevaInscripcion.js";
 import { formatearFecha } from "../../utils/functions/formatearFecha.js";
-
+import { agregarNuevaInscripcionAExcel } from "../../utils/functions/agregarNuevaInscripcionAExcel.js";
 import { getMinisterios } from "../../utils/functions/getMinisterios.js";
+import { getInscripcionById } from "../../utils/functions/getInscripcionById.js";
 
 import "../../public/styles/form-inscripcion.css"
 
@@ -158,6 +159,10 @@ export const FormularioInscripcion = () => {
             setCantidadHoras(dataUltimaInscripcion.cantidadHoras)
             setCupo(dataUltimaInscripcion.cupo)
             setTutores(dataUltimaInscripcion.tutores)
+            setStartDateCurso(dataUltimaInscripcion.fechaInicioCurso)
+            setEndDateCurso(dataUltimaInscripcion.fechaFinCurso)
+            setStartDateInscripcion(dataUltimaInscripcion.fechaInicioInscripcion)
+            setEndDateInscripcion(dataUltimaInscripcion.fechaFinInscripcion)
         } else {
             setAutorizador("")
             setSelectedMedioInscripcion("sin-seleccionar-ministerio")
@@ -166,6 +171,10 @@ export const FormularioInscripcion = () => {
             setCantidadHoras(0)
             setCupo(0)
             setTutores([])
+            setStartDateCurso("")
+            setEndDateCurso("")
+            setStartDateInscripcion("")
+            setEndDateInscripcion("")
         }
 
 
@@ -213,7 +222,7 @@ export const FormularioInscripcion = () => {
     }
 
     const handleCantidadHorasChange = (event) => {
-        setHoras(event.target.value);
+        setCantidadHoras(event.target.value);
     }
 
     const handleMedioInscripcionChange = (event) => {
@@ -312,7 +321,6 @@ export const FormularioInscripcion = () => {
             setCursos([])
             setSelectedCurso("sin-seleccionar-curso")
             setAutorizador("")
-            setSelectedArea("sin-seleccionar-area")
             setCupo(0)
             setCantidadHoras(0)
             setTutores([])
@@ -380,9 +388,9 @@ export const FormularioInscripcion = () => {
 
     const handleEnviarFormulario = async () => {
         try {
-            
 
-              
+
+
 
             const inscripcion = {
                 curso: selectedCurso,
@@ -398,13 +406,13 @@ export const FormularioInscripcion = () => {
                 tutores: selectedTutores,
             }
 
-            
-
-            
-
 
             const nuevaInscripcion = await crearNuevaInscripcion(inscripcion);
-            
+            const nuevaInscripcionPoblada = await getInscripcionById(nuevaInscripcion._id)
+            const res = await agregarNuevaInscripcionAExcel(nuevaInscripcionPoblada);
+
+            console.log(res)
+
             Swal.fire({
                 position: 'center',
                 icon: 'success',
@@ -416,6 +424,23 @@ export const FormularioInscripcion = () => {
 
             // EL referente se carga desde el lado del servidor directamente. Esto es así ya que el referente se decide que será siempre el usuario que carga la inscripción. 
 
+
+            setSelectedMinisterio("sin-seleccionar-ministerio");
+            setAreas([]);
+            setSelectedArea("sin-seleccionar-area")
+            setCursos([])
+            setSelectedCurso("sin-seleccionar-curso")
+            setAutorizador("")
+            setCupo(0)
+            setCantidadHoras(0)
+            setTutores([])
+            setSelectedMedioInscripcion("sin-seleccionar-ministerio")
+            setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
+            setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
+            setEndDateCurso("")
+            setStartDateCurso("")
+            setEndDateInscripcion("")
+            setStartDateInscripcion("")
 
 
         } catch (error) {
@@ -535,14 +560,20 @@ export const FormularioInscripcion = () => {
                             <label htmlFor="ministerio" className="form-label mt-4">
                                 Ministerio
                             </label>
-                            <button className="buttonIcon" style={{ backgroundImage: 'url(../img/editar.png)' }}></button>
+                            <button
+                                className="buttonIcon"
+                                style={{ backgroundImage: 'url(../img/editar.png)' }}
+
+                            >
+                            </button>
                             <button
                                 className="buttonIcon"
                                 style={{ backgroundImage: 'url(../img/agregar.png)' }}
                                 onClick={() => setModalAgregarMinisterio(true)}
+
                             >
                             </button>
-
+                           
 
                             <select className="form-select" id="ministerio" value={selectedMinisterio} onChange={handleSelectedMinisterioChange}>
                                 <option value="sin-seleccionar-ministerio">Seleccione un Ministerio</option>
@@ -553,7 +584,7 @@ export const FormularioInscripcion = () => {
                                     </option>
                                 ))}
                             </select>
-
+                                    
 
                         </div>
                         <div className="form-group">
@@ -659,7 +690,7 @@ export const FormularioInscripcion = () => {
                                 <input
                                     className="form-control"
                                     id="readOnlyInput"
-                                    type="text"
+                                    type="number"
                                     placeholder="Cupo máximo del curso"
                                     readOnly=""
                                     value={cupo && cupo}
@@ -673,7 +704,7 @@ export const FormularioInscripcion = () => {
                                 <input
                                     className="form-control"
                                     id="readOnlyInput"
-                                    type="text"
+                                    type="number"
                                     placeholder="Cantidad estimada de horas..."
                                     readOnly=""
                                     value={cantidadHoras && cantidadHoras}

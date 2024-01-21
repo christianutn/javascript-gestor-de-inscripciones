@@ -2,7 +2,7 @@ import {tipoDeCapacitacionModel } from "../models/tipoDeCapacitacion.models.js";
 
 export const getTipoDeCapacitacion = async (req, res) => {
     try {
-        const tiposDeCapacitacion = await tipoDeCapacitacionModel.find();
+        const tiposDeCapacitacion = await tipoDeCapacitacionModel.find().sort('nombre');
         
         if(tiposDeCapacitacion){
             res.status(200).json(tiposDeCapacitacion);

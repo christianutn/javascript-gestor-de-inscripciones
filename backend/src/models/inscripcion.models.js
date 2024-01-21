@@ -61,6 +61,7 @@ const inscripcionSchema = new Schema({
 
 inscripcionSchema.index({curso: 1, fechaInicioCurso: 1}, {unique: true});
 
+
 inscripcionSchema.pre(['findOne', 'findById', 'find'], function() {
     this.populate({
         path: 'curso',

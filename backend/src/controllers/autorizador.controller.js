@@ -15,7 +15,7 @@ export const getAutorizadores = async (req, res) => {
         if (apellido) {
             query.apellido = { $regex: apellido, $options: 'i' };
         }
-        const autorizadores = await autorizadorModel.find(query);
+        const autorizadores = await autorizadorModel.find(query).sort('apellido');
         
         if(autorizadores){
             res.status(200).json(autorizadores);

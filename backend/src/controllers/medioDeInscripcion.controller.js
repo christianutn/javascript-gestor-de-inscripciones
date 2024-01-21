@@ -2,7 +2,7 @@ import { medioDeInscripcionModel } from "../models/medioDeInscripcion.models.js"
 
 export const getMediosDeInscripcion = async (req, res) => {
     try {
-        const mediosDeInscripcion = await medioDeInscripcionModel.find();
+        const mediosDeInscripcion = await medioDeInscripcionModel.find().sort('nombre');
 
         if (mediosDeInscripcion) {
             res.status(200).json(mediosDeInscripcion);

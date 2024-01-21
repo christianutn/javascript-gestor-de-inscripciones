@@ -13,7 +13,7 @@ export const getTutores = async (req, res) => {
         if(apellido){
             query.apellido = { $regex: `^${apellido}`, $options: 'i' };
         }
-        const tutores = await tutorModel.find(query);
+        const tutores = await tutorModel.find(query).sort('apellido');
         if(tutores){
             res.status(200).json(tutores);
         }else{

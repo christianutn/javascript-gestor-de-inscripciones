@@ -31,7 +31,7 @@ export const getInscripciones = async (req, res) => {
         }
 
         // Realizar la búsqueda utilizando el objeto de consulta
-        const inscripciones = await inscripcionModel.find(query);
+        const inscripciones = await inscripcionModel.find(query)
 
         if (inscripciones && inscripciones.length > 0) {
             res.status(200).json(inscripciones);

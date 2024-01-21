@@ -3,7 +3,7 @@ import { formatearFecha } from "./formatearFecha.js";
 
 export const generarNuevaFila = (inscripcion) => {
     try {
-        const nombreMinisterio = inscripcion.curso.ministerio.nombre
+        const nombreMinisterio = inscripcion.curso.area.ministerio.nombre
         const codCurso = inscripcion.curso.cod;
         const nombreCurso = inscripcion.curso.nombre;
         const fechaInicioCursoForm = formatearFecha(inscripcion.fechaInicioCurso)

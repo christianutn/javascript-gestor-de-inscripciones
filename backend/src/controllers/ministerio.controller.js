@@ -12,7 +12,7 @@ export const getMinisterios = async (req, res) => {
         if(nombre) query.nombre = nombre
 
 
-        const ministerios = await ministerioModel.find(query);
+        const ministerios = await ministerioModel.find(query).sort('nombre');
         
         if(ministerios && ministerios.length > 0){
             res.status(200).json(ministerios);

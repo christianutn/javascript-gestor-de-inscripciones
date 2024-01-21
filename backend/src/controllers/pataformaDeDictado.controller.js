@@ -2,7 +2,7 @@ import {plataformaDeDictadoModel} from "../models/plataformaDeDictado.models.js"
 
 export const getPlataformaDeDictado = async (req, res) => {
     try {
-        const plataformasDeDictados = await plataformaDeDictadoModel.find();
+        const plataformasDeDictados = await plataformaDeDictadoModel.find().sort('nombre');
         if(plataformasDeDictados){
             res.status(200).json(plataformasDeDictados);
         }else{

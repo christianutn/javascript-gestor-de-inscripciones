@@ -17,7 +17,7 @@ export const getCursos = async (req, res) => {
             query.area = area;
         }
 
-        const cursos = await cursoModel.find(query);
+        const cursos = await cursoModel.find(query).sort('nombre');
 
         if (cursos.length > 0) {
             res.status(200).json(cursos);
@@ -79,7 +79,7 @@ export const updateCursoByCod = async (req, res) => {
 export const postCurso = async (req, res) => {
     try {
         const { cod, nombre, autorizador, ministerio, area } = req.body;
-        const newCurso = await cursoModel.create({ cod, nombre, ministerio, autorizador, area });
+        const newCurso = await cursoModel.create({ cod, nombre, ministerio, autorizador, area })
         if (newCurso) {
             res.status(201).json(newCurso);
         } else {

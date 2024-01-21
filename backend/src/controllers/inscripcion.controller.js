@@ -80,8 +80,9 @@ export const postIncripcion = async (req, res) => {
             })
         }
     } catch (error) {
+        console.log(error)
         res.status(500).json({
-            message: 'Error al crear la inscripción',
+            message: `Error al crear la inscripción - ${error.message}`,
             error: `Consulta de error: ${error}`
         })
     }

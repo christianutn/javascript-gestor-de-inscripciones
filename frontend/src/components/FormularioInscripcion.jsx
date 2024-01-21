@@ -11,6 +11,8 @@ import { getMediosDeInscripcion } from "../../utils/functions/getMediosDeInscrip
 import { getPlataformasDeDictado } from "../../utils/functions/getPlataformasDeDictado.js";
 import { getTiposDeCapacitacion } from "../../utils/functions/getTiposDeCapacitacion.js"
 import { obtenerDatosUltimaInscripcion } from "../../utils/functions/obtenerDatosUltimaInscripcion.js";
+import { crearNuevaInscripcion } from "../../utils/functions/crearNuevaInscripcion.js";
+import { formatearFecha } from "../../utils/functions/formatearFecha.js";
 
 import { getMinisterios } from "../../utils/functions/getMinisterios.js";
 
@@ -150,9 +152,9 @@ export const FormularioInscripcion = () => {
             const listaInscripcionesCurso = await getInscripcionesByIdCurso(cursoSeleccionado);
             const dataUltimaInscripcion = await obtenerDatosUltimaInscripcion(listaInscripcionesCurso);
 
-            setSelectedMedioInscripcion(dataUltimaInscripcion.medioDeInscripcion.cod)
-            setSelectedPlataformaDictado(dataUltimaInscripcion.plataformaDeDictado.cod)
-            setSelectedTipoCapacitacion(dataUltimaInscripcion.tipoDeCapacitacion.cod)
+            setSelectedMedioInscripcion(dataUltimaInscripcion.medioDeInscripcion._id)
+            setSelectedPlataformaDictado(dataUltimaInscripcion.plataformaDeDictado._id)
+            setSelectedTipoCapacitacion(dataUltimaInscripcion.tipoDeCapacitacion._id)
             setCantidadHoras(dataUltimaInscripcion.cantidadHoras)
             setCupo(dataUltimaInscripcion.cupo)
             setTutores(dataUltimaInscripcion.tutores)
@@ -371,6 +373,61 @@ export const FormularioInscripcion = () => {
     const [isOpenModalAgregarTutor, setIsOpenModalAgregarTutor] = useState(false);
     const handleCloseModalAgregagrTutor = (nuevoTutor) => {
         setIsOpenModalAgregarTutor(false);
+    }
+
+
+    //Enviar formulario
+
+    const handleEnviarFormulario = async () => {
+        try {
+            
+
+              
+
+            const inscripcion = {
+                curso: selectedCurso,
+                fechaInicioCurso: formatearFecha(startDateCurso),
+                fechaFinCurso: formatearFecha(endDateCurso),
+                fechaInicioInscripcion: formatearFecha(startDateInscripcion),
+                fechaFinInscripcion: formatearFecha(endDateInscripcion),
+                cupo: cupo,
+                cantidadHoras: cantidadHoras,
+                medioDeInscripcion: selectedMedioInscripcion,
+                plataformaDeDictado: selectedPlataformaDictado,
+                tipoDeCapacitacion: selectedTipoCapacitacion,
+                tutores: selectedTutores,
+            }
+
+            
+
+            
+
+
+            const nuevaInscripcion = await crearNuevaInscripcion(inscripcion);
+            
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Inscripción creada con exito',
+                showConfirmButton: false,
+                timer: 3000,
+                backdrop: false,
+            });
+
+            // EL referente se carga desde el lado del servidor directamente. Esto es así ya que el referente se decide que será siempre el usuario que carga la inscripción. 
+
+
+
+        } catch (error) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: "Error al intentar crear la inscripción",
+                showConfirmButton: false,
+                timer: 3000,
+                backdrop: false,
+            });
+        }
     }
     //COn use Effect de esta manera logro que las funciones que lo contiene se ejecutan al principio del render, luego no se vuelve a ejecutar.
     useEffect(() => {
@@ -631,7 +688,7 @@ export const FormularioInscripcion = () => {
                                     <option value="sin-seleccionar-ministerio">Seleccionar</option>
                                     {
                                         mediosInscripcion && mediosInscripcion.length > 0 && mediosInscripcion.map((medio) => (
-                                            <option key={medio.cod} value={medio.cod}>
+                                            <option key={medio._id} value={medio._id}>
                                                 {medio.nombre}
                                             </option>
                                         ))
@@ -651,7 +708,7 @@ export const FormularioInscripcion = () => {
                                         <option value={"sin-seleccionar-plataforma-dictado"}>Seleccionar</option>
                                         {
                                             plataformasDictado && plataformasDictado.length > 0 && plataformasDictado.map((plataforma) => (
-                                                <option key={plataforma.cod} value={plataforma.cod}>
+                                                <option key={plataforma._id} value={plataforma._id}>
                                                     {plataforma.nombre}
                                                 </option>
                                             ))
@@ -669,7 +726,7 @@ export const FormularioInscripcion = () => {
                                         <option value={"sin-seleccionar-tipo-capacitacion"}>Seleccionar</option>
                                         {
                                             tiposCapacitacion && tiposCapacitacion.length > 0 && tiposCapacitacion.map((tipoCapacitacion) => (
-                                                <option key={tipoCapacitacion.cod} value={tipoCapacitacion.cod}>
+                                                <option key={tipoCapacitacion._id} value={tipoCapacitacion._id}>
                                                     {tipoCapacitacion.nombre}
                                                 </option>
                                             ))
@@ -707,7 +764,7 @@ export const FormularioInscripcion = () => {
 
                                             ))
                                         }
-                                        
+
                                         <button className="buttonIcon" id="btnAgregarTutor" name="btnAgregarTutor" style={{ backgroundImage: 'url(../img/agregarTutor.png)' }} onClick={handleOpenModal}></button>
 
 
@@ -732,7 +789,7 @@ export const FormularioInscripcion = () => {
 
                     </div>
                     <div className="d-grid gap-2">
-                        <button className="btn btn-lg btn-primary" type="button">
+                        <button className="btn btn-lg btn-primary" type="button" onClick={handleEnviarFormulario}>
                             Enviar
                         </button>
                     </div>

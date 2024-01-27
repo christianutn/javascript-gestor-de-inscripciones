@@ -527,11 +527,13 @@ export const FormularioInscripcion = () => {
                 isOpen={isOpenModalAgregarCurso}
                 onClose={handleCloseModalAgregagrCurso}
                 ministerios={ministerios}
+                abrirDesdeOtroModal = {() => setModalAgregarCurso(true)}
             />
 
             <ModalAgregarAutorizador
                 isOpen={isOpenModalAgregarAutorizador}
                 onClose={handleCloseModalAgregagrAutorizador}
+                
             />
 
             <ModalBuscarTutor

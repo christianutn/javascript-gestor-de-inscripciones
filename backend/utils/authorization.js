@@ -1,5 +1,5 @@
 
-export const authorization = (listaRolesAceptados) => { //rol = 'Admin' desde ruta 'Crear Producto'
+export const authorization = (listaRolesAceptados) => { 
     return async (req, res, next) => {
         
         if (!req.user) {

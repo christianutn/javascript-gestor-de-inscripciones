@@ -9,7 +9,7 @@ import { ModalAgregarAutorizador } from './ModalAgregarAutorizador';
 // ModalBuscarTutor.jsx
 
 
-export const ModalAgregarCurso = ({ isOpen, onClose, ministerios }) => {
+export const ModalAgregarCurso = ({ isOpen, onClose, ministerios, abrirDesdeOtroModal }) => {
 
 
 
@@ -88,11 +88,11 @@ export const ModalAgregarCurso = ({ isOpen, onClose, ministerios }) => {
 
     const handleCloseModalAutorizador = () => {
         setIsOpenModalAutorizador(false)
+        abrirDesdeOtroModal()
     }
 
     const handleClickCrearAutorizador = () => {
-
-        onClose();
+         onClose()
         setIsOpenModalAutorizador(true)
     }
 

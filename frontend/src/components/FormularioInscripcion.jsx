@@ -144,13 +144,14 @@ export const FormularioInscripcion = () => {
         const cursoSeleccionado = event.target.value;
         setSelectedCurso(cursoSeleccionado);
 
+        try {
 
-        if (cursoSeleccionado !== "sin-seleccionar-curso") {
             const autorizador = await getAutorizadorByCurso(cursoSeleccionado)
             setAutorizador(autorizador);
 
             //selectedCurso es el idCurso
             const listaInscripcionesCurso = await getInscripcionesByIdCurso(cursoSeleccionado);
+
             const dataUltimaInscripcion = await obtenerDatosUltimaInscripcion(listaInscripcionesCurso);
 
             setSelectedMedioInscripcion(dataUltimaInscripcion.medioDeInscripcion._id)
@@ -159,11 +160,9 @@ export const FormularioInscripcion = () => {
             setCantidadHoras(dataUltimaInscripcion.cantidadHoras)
             setCupo(dataUltimaInscripcion.cupo)
             setTutores(dataUltimaInscripcion.tutores)
-            setStartDateCurso(dataUltimaInscripcion.fechaInicioCurso)
-            setEndDateCurso(dataUltimaInscripcion.fechaFinCurso)
-            setStartDateInscripcion(dataUltimaInscripcion.fechaInicioInscripcion)
-            setEndDateInscripcion(dataUltimaInscripcion.fechaFinInscripcion)
-        } else {
+        } catch (error) {
+
+
             setAutorizador("")
             setSelectedMedioInscripcion("sin-seleccionar-ministerio")
             setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
@@ -171,10 +170,8 @@ export const FormularioInscripcion = () => {
             setCantidadHoras(0)
             setCupo(0)
             setTutores([])
-            setStartDateCurso("")
-            setEndDateCurso("")
-            setStartDateInscripcion("")
-            setEndDateInscripcion("")
+
+            throw new Error(error);
         }
 
 
@@ -527,13 +524,13 @@ export const FormularioInscripcion = () => {
                 isOpen={isOpenModalAgregarCurso}
                 onClose={handleCloseModalAgregagrCurso}
                 ministerios={ministerios}
-                abrirDesdeOtroModal = {() => setModalAgregarCurso(true)}
+                abrirDesdeOtroModal={() => setModalAgregarCurso(true)}
             />
 
             <ModalAgregarAutorizador
                 isOpen={isOpenModalAgregarAutorizador}
                 onClose={handleCloseModalAgregagrAutorizador}
-                
+
             />
 
             <ModalBuscarTutor
@@ -575,7 +572,7 @@ export const FormularioInscripcion = () => {
 
                             >
                             </button>
-                           
+
 
                             <select className="form-select" id="ministerio" value={selectedMinisterio} onChange={handleSelectedMinisterioChange}>
                                 <option value="sin-seleccionar-ministerio">Seleccione un Ministerio</option>
@@ -586,7 +583,7 @@ export const FormularioInscripcion = () => {
                                     </option>
                                 ))}
                             </select>
-                                    
+
 
                         </div>
                         <div className="form-group">

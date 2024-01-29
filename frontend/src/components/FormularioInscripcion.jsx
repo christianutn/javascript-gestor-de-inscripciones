@@ -91,18 +91,66 @@ export const FormularioInscripcion = () => {
         if (ministerioSeleccionado !== "sin-seleccionar-ministerio") nuevaAreas = await getAreasByMinisterio(ministerioSeleccionado);
 
         setAreas(nuevaAreas);
-        setCursos([])
-        setSelectedCurso("sin-seleccionar-curso")
-        setAutorizador("")
-        setSelectedArea("sin-seleccionar-area")
-        setCupo(0)
-        setCantidadHoras(0)
-        setTutores([])
-        setSelectedMedioInscripcion("sin-seleccionar-ministerio")
-        setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
-        setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
 
+        limpiarFormDesde("cursos")
 
+    }
+
+    // Funciones para limpiar formulario y estados
+
+    const limpiarFormDesde = (unElementoDeFormulario) => {
+
+        switch (unElementoDeFormulario) {
+            case "cursos":
+                setCursos([])
+                setSelectedCurso("sin-seleccionar-curso")
+                setAutorizador("")
+                setCupo(0)
+                setCantidadHoras(0)
+                setTutores([])
+                setSelectedMedioInscripcion("sin-seleccionar-ministerio")
+                setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
+                setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
+                setEndDateCurso(undefined)
+                setStartDateCurso(undefined)
+                setEndDateInscripcion(undefined)
+                setStartDateInscripcion(undefined)
+                setSelectedTutores([])
+                break;
+            case "autorizador":
+                setAutorizador("")
+                setCupo(0)
+                setCantidadHoras(0)
+                setTutores([])
+                setSelectedMedioInscripcion("sin-seleccionar-ministerio")
+                setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
+                setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
+                setEndDateCurso(undefined)
+                setStartDateCurso(undefined)
+                setEndDateInscripcion(undefined)
+                setStartDateInscripcion(undefined)
+                setSelectedTutores([])
+                break;
+            case "areas":
+                setAreas([]);
+                setCursos([])
+                setSelectedCurso("sin-seleccionar-curso")
+                setAutorizador("")
+                setSelectedArea("sin-seleccionar-area")
+                setCupo(0)
+                setCantidadHoras(0)
+                setTutores([])
+                setSelectedMedioInscripcion("sin-seleccionar-ministerio")
+                setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
+                setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
+                setEndDateCurso(undefined)
+                setStartDateCurso(undefined)
+                setEndDateInscripcion(undefined)
+                setStartDateInscripcion(undefined)
+                setSelectedTutores([])
+                break;
+
+        }
 
     }
 
@@ -114,22 +162,19 @@ export const FormularioInscripcion = () => {
 
 
     const handleSelectedAreaChange = async (event) => {
-        const areaSeleccionada = event.target.value;
-        setSelectedArea(areaSeleccionada);
+        try {
+            const areaSeleccionada = event.target.value;
+            setSelectedArea(areaSeleccionada);
 
-        let nuevosCursos = [];
-        if (areaSeleccionada !== "sin-seleccionar-area") nuevosCursos = await getCursosByArea(areaSeleccionada)
+            let nuevosCursos = await getCursosByArea(areaSeleccionada)
 
-        setCursos(nuevosCursos);
-        setSelectedCurso("sin-seleccionar-curso")
-        //Reiniciar demás variables. 
-        setAutorizador("")
-        setCupo(0)
-        setCantidadHoras(0)
-        setTutores([])
-        setSelectedMedioInscripcion("sin-seleccionar-ministerio")
-        setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
-        setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
+            setCursos(nuevosCursos);
+            setSelectedCurso("sin-seleccionar-curso")
+
+        } catch (error) {
+            limpiarFormDesde("cursos")
+            throw new Error(error)
+        }
 
     }
 
@@ -163,13 +208,7 @@ export const FormularioInscripcion = () => {
         } catch (error) {
 
 
-            setAutorizador("")
-            setSelectedMedioInscripcion("sin-seleccionar-ministerio")
-            setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
-            setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
-            setCantidadHoras(0)
-            setCupo(0)
-            setTutores([])
+            limpiarFormDesde("autorizador")
 
             throw new Error(error);
         }
@@ -284,17 +323,7 @@ export const FormularioInscripcion = () => {
             setMinisterios(ministerios);
             setSelectedMinisterio(nuevoMinisterio._id);
 
-            setAreas([]);
-            setCursos([])
-            setSelectedCurso("sin-seleccionar-curso")
-            setAutorizador("")
-            setSelectedArea("sin-seleccionar-area")
-            setCupo(0)
-            setCantidadHoras(0)
-            setTutores([])
-            setSelectedMedioInscripcion("sin-seleccionar-ministerio")
-            setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
-            setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
+            limpiarFormDesde("areas")
         }
 
     }
@@ -313,17 +342,13 @@ export const FormularioInscripcion = () => {
 
             const areas = await getAreasByMinisterio(idMinisterio)
             setAreas(areas)
-            setSelectedArea(nuevaArea._id);
+
             //Reiniciamos 
-            setCursos([])
-            setSelectedCurso("sin-seleccionar-curso")
-            setAutorizador("")
-            setCupo(0)
-            setCantidadHoras(0)
-            setTutores([])
-            setSelectedMedioInscripcion("sin-seleccionar-ministerio")
-            setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
-            setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
+            limpiarFormDesde("cursos")
+
+
+            setSelectedArea(nuevaArea._id);
+
         } else {
             setModalArea(false)
         }
@@ -381,13 +406,31 @@ export const FormularioInscripcion = () => {
     }
 
 
+    //Manejar errores al enviar formulario
+    const handleErroresEnvioFormulario = () => {
+        if (selectedMinisterio === 'sin-seleccionar-ministerio') throw new Error('Debe seleccionar un ministerio')
+        if (selectedArea === 'sin-seleccionar-area') throw new Error('Debe seleccionar un area')
+        if (selectedCurso === 'sin-seleccionar-curso') throw new Error('Debe seleccionar un curso')
+        if (!autorizador) throw new Error('Debe crear un autorizador para el curso')
+        if (isNaN(startDateCurso) || startDateCurso === null) throw new Error('La fecha de inicio del curso no es valida')
+        if (isNaN(endDateCurso) || endDateCurso === null) throw new Error('La fecha de fin del curso no es valida')
+        if (isNaN(startDateInscripcion) || startDateInscripcion === null) throw new Error('La fecha de inicio de inscripción no es valida')
+        if (isNaN(endDateInscripcion) || endDateInscripcion === null) throw new Error('La fecha de fin de inscripción no es valida')
+        if (!Number.isInteger(cupo) || cupo <= 0) throw new Error('El cupo debe ser un entero mayor a cero')
+        if (!Number.isInteger(cantidadHoras) || cantidadHoras <= 0) throw new Error('La cantidad de horas debe ser un valor entero mayor que cero')
+        if (selectedMedioInscripcion === 'sin-seleccionar-medio-inscripcion') throw new Error('Debe seleccionar un medio de inscripcion')
+        if (selectedPlataformaDictado === 'sin-seleccionar-plataforma-dictado') throw new Error('Debe seleccionar una plataforma de dictado')
+        if (selectedTipoCapacitacion === 'sin-seleccionar-tipo-capacitacion') throw new Error('Debe seleccionar un tipo de capacitación')
+        if (selectedTutores.length === 0) throw new Error('Debe seleccionar un tutor')
+    }
+
     //Enviar formulario
 
     const handleEnviarFormulario = async () => {
         try {
 
 
-
+            handleErroresEnvioFormulario()
 
             const inscripcion = {
                 curso: selectedCurso,
@@ -423,28 +466,15 @@ export const FormularioInscripcion = () => {
 
 
             setSelectedMinisterio("sin-seleccionar-ministerio");
-            setAreas([]);
-            setSelectedArea("sin-seleccionar-area")
-            setCursos([])
-            setSelectedCurso("sin-seleccionar-curso")
-            setAutorizador("")
-            setCupo(0)
-            setCantidadHoras(0)
-            setTutores([])
-            setSelectedMedioInscripcion("sin-seleccionar-ministerio")
-            setSelectedPlataformaDictado("sin-seleccionar-plataforma-de-dictado")
-            setSelectedTipoCapacitacion("sin-seleccionar-tipo-de-capacitacion")
-            setEndDateCurso("")
-            setStartDateCurso("")
-            setEndDateInscripcion("")
-            setStartDateInscripcion("")
+
+            limpiarFormDesde("areas")
 
 
         } catch (error) {
             Swal.fire({
                 position: 'center',
                 icon: 'error',
-                title: "Error al intentar crear la inscripción",
+                title: `${error.message}`,
                 showConfirmButton: false,
                 timer: 3000,
                 backdrop: false,
@@ -490,7 +520,7 @@ export const FormularioInscripcion = () => {
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: `${error.message}`,
+                    title: `${error}`,
                     showConfirmButton: false,
                     timer: 3000,
                     backdrop: false,

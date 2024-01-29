@@ -24,7 +24,11 @@ const inscripcionSchema = new Schema({
     },
     cupo: {
         type: Number,
-        required: true
+        required: true,
+        validate: {
+            validator: value => Number.isInteger(value) && value > 0,
+            message: 'El cupo debe ser un entero mayor a cero'
+        }
     },
     cantidadHoras: {
         type: Number,
@@ -50,7 +54,9 @@ const inscripcionSchema = new Schema({
     },
     tutores: {
         type: [Schema.Types.ObjectId],
-        ref: 'tutores'
+        ref: 'tutores',
+        required: true
+       
     },
     referente: {
         type: Schema.Types.ObjectId,

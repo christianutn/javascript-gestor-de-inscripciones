@@ -32,6 +32,6 @@ export const crearNuevaInscripcion = async (inscripcion) => {
         }
 
     } catch (error) {
-        throw new Error(error);
+        throw new Error(error.message);
     }
 }
